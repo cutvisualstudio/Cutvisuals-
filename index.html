@@ -586,21 +586,21 @@ html.dfx #about .photo{translate:0 0!important}
 .dtx{display:none}
 @media(min-width:1100px) and (hover:hover) and (pointer:fine){
 .dock{align-items:center;padding:8px 8px 8px 26px;gap:10px;transition:padding .6s cubic-bezier(.2,.8,.2,1),opacity .3s,transform .4s}
-.dock:hover,.dock:focus-within{padding:8px}
+.dock.dk-open,.dock:focus-within{padding:8px}
 .dtx{display:flex;flex-direction:column;gap:4px;max-width:240px;margin-right:12px;overflow:hidden;white-space:nowrap;color:#fff;transition:max-width .6s cubic-bezier(.2,.8,.2,1),margin .6s cubic-bezier(.2,.8,.2,1),opacity .35s ease,filter .45s ease}
 .dtx b{font:600 18px/1.1 "DM Sans",system-ui,sans-serif}
 .dtx small{font:400 14px/1.1 "DM Sans",system-ui,sans-serif;color:#b7b7c0}
 .dock .dk{padding:0 16px;gap:0;transition:padding .6s cubic-bezier(.2,.8,.2,1),gap .6s cubic-bezier(.2,.8,.2,1),filter .2s,transform .2s}
 .dock .dk .dl{display:inline-block;max-width:0;opacity:0;filter:blur(8px);overflow:hidden;transition:max-width .6s cubic-bezier(.2,.8,.2,1),opacity .4s ease .08s,filter .5s ease .05s}
-.dock:hover .dtx,.dock:focus-within .dtx{max-width:0;margin-right:0;opacity:0;filter:blur(8px)}
-.dock:hover .dk,.dock:focus-within .dk{padding:0 28px;gap:10px}
-.dock:hover .dk .dl,.dock:focus-within .dk .dl{max-width:170px;opacity:1;filter:none}
+.dock.dk-open .dtx,.dock:focus-within .dtx{max-width:0;margin-right:0;opacity:0;filter:blur(8px)}
+.dock.dk-open .dk,.dock:focus-within .dk{padding:0 28px;gap:10px}
+.dock.dk-open .dk .dl,.dock:focus-within .dk .dl{max-width:170px;opacity:1;filter:none}
 }
 /* ===== liquid-glass nav that morphs on scroll (desktop, mouse) ===== */
 .nmenu{display:none}
 html.dfx nav{width:100%;overflow:visible!important;transition:width .65s cubic-bezier(.2,.8,.2,1),padding .65s cubic-bezier(.2,.8,.2,1),translate .55s;
 background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02)),rgba(20,20,28,.30)!important;
--webkit-backdrop-filter:blur(10px) saturate(1.9) brightness(1.06)!important;backdrop-filter:url(#lgd) blur(10px) saturate(1.9) brightness(1.06)!important;
+-webkit-backdrop-filter:blur(10px) saturate(1.9) brightness(1.06)!important;backdrop-filter:blur(12px) saturate(1.9) brightness(1.06)!important;
 border:1px solid rgba(255,255,255,.22)!important;
 box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -1px 1px rgba(255,255,255,.14),inset 0 0 22px rgba(255,255,255,.07),0 14px 44px rgba(0,0,0,.5)!important}
 html.dfx nav:before{display:none}
@@ -613,7 +613,7 @@ html.dfx nav.dfx-compact.open .burger i:nth-child(1){transform:translateY(9px) r
 html.dfx nav.dfx-compact.open .burger i:nth-child(2){opacity:0}
 html.dfx nav.dfx-compact.open .burger i:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
 html.dfx nav .nmenu{display:flex;flex-direction:column;gap:4px;position:absolute;top:calc(100% + 12px);right:0;min-width:270px;padding:14px;border-radius:28px;opacity:0;visibility:hidden;transform:translateY(-10px) scale(.97);transform-origin:100% 0;transition:opacity .3s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .45s;
-background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02)),rgba(18,18,26,.78);-webkit-backdrop-filter:blur(18px) saturate(1.9);backdrop-filter:url(#lgd) blur(18px) saturate(1.9);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 1px rgba(255,255,255,.55),0 18px 50px rgba(0,0,0,.55)}
+background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02)),rgba(18,18,26,.78);-webkit-backdrop-filter:blur(18px) saturate(1.9);backdrop-filter:blur(18px) saturate(1.9);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 1px rgba(255,255,255,.55),0 18px 50px rgba(0,0,0,.55)}
 html.dfx nav.dfx-compact.open .nmenu{opacity:1;visibility:visible;transform:none;transition:opacity .3s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s}
 html.dfx nav .nmenu a{display:block;padding:13px 16px;border-radius:16px;color:#fff;font-size:19px;text-decoration:none;transition:background .25s}
 html.dfx nav .nmenu a:not(.btn):hover{background:rgba(255,255,255,.1)}
@@ -636,6 +636,22 @@ html.dfx nav>div{margin-left:auto}
 #services .stack>div{margin-bottom:0!important}
 #services .stack>div+div{margin-top:26vh}
 }
+/* dock: stable hover zone so the edge never flickers (desktop, mouse) */
+@media(min-width:1100px) and (hover:hover) and (pointer:fine){
+.dock:before{content:"";position:absolute;inset:-20px -24px;border-radius:44px;pointer-events:auto}
+.dock .dk{transition-property:padding,gap,filter!important}
+}
+/* steady glass: promote nav to its own layer so cursor movement elsewhere never re-renders it */
+html.dfx nav{will-change:width;transform:translateZ(0);contain:layout style}
+html.dfx nav .nmenu{contain:layout style}
+/* About paragraphs: plain static text, no reveal animation */
+.about p,.abr p{opacity:1!important;transform:none!important;filter:none!important;animation:none!important;transition:none!important}
+.about p .wd{opacity:1!important;filter:none!important;transform:none!important;transition:none!important}
+/* cursor glow: fade out before the hero edges so no straight cut-off line shows */
+html.dfx .dfx-spot{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 140px,#000 calc(100% - 300px),transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 140px,#000 calc(100% - 300px),transparent 100%)}
+/* thin full-width divider lines between page sections */
+.w>section:not(#work),.w>footer{position:relative}
+.w>section:not(#work)::before,.w>footer::before{content:"";position:absolute;top:0;left:50%;width:100vw;margin-left:-50vw;height:1px;background:rgba(255,255,255,.14);pointer-events:none}
 </style>
 </head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="lg" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.02" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="40" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="lgd" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.016" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G"/></filter></svg><div class="pb" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -767,7 +783,7 @@ n.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(
 (function(){
 document.querySelectorAll(".hero h1 span").forEach(function(s){var i=0;s.innerHTML=s.textContent.split("").map(function(c){return '<i class="lt" style="--i:'+(i++)+'">'+c+'</i>'}).join("")});
 window.__fit&&window.__fit();
-document.querySelectorAll("h2,.about p,.hero p.sub").forEach(function(el){if(el.children.length)return;var i=0;el.classList.add("w-r");el.innerHTML=el.textContent.split(" ").map(function(w){return '<span class="wd" style="--i:'+(i++)+'">'+w+'</span>'}).join(" ")});
+document.querySelectorAll("h2,.hero p.sub").forEach(function(el){if(el.children.length)return;var i=0;el.classList.add("w-r");el.innerHTML=el.textContent.split(" ").map(function(w){return '<span class="wd" style="--i:'+(i++)+'">'+w+'</span>'}).join(" ")});
 document.querySelectorAll(".proj,.job,.tiles,.stats,.rvh,.tt").forEach(function(e){e.classList.add("rv")});
 document.querySelectorAll("nav div a,.btn").forEach(function(a){if(a.children.length)return;var t=a.textContent;a.innerHTML='<span class="rl"><span data-t="'+t+'">'+t+'</span></span>'});
 function count(box){box.querySelectorAll("strong").forEach(function(s){var n=+s.dataset.n,suf=s.dataset.s||"",t0=null;function f(t){if(!t0)t0=t;var p=Math.min((t-t0)/1400,1);s.textContent=Math.round(n*(1-Math.pow(1-p,3)))+suf;if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)})}
@@ -896,10 +912,6 @@ document.documentElement.addEventListener("mouseleave",function(){cur.classList.
 $(".proj").forEach(function(p){var t=p.querySelector(".thumb");if(!t)return;
 p.addEventListener("pointermove",function(e){if(!on)return;var r=t.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;t.style.setProperty("--ry",(x*9).toFixed(2)+"deg");t.style.setProperty("--rx",(-y*9).toFixed(2)+"deg")});
 p.addEventListener("pointerleave",function(){t.style.setProperty("--rx","0deg");t.style.setProperty("--ry","0deg")})});
-/* magnetic */
-$(".btn,.soc a").forEach(function(el){
-el.addEventListener("pointermove",function(e){if(!on)return;var r=el.getBoundingClientRect();el.style.translate=((e.clientX-r.left-r.width/2)*.28).toFixed(1)+"px "+((e.clientY-r.top-r.height/2)*.35).toFixed(1)+"px"});
-el.addEventListener("pointerleave",function(){var f=el.style.translate||"0px 0px";el.style.translate="";if(el.animate)el.animate([{translate:f},{translate:"0px 0px"}],{duration:600,easing:"cubic-bezier(.2,.9,.3,1.4)"})})});
 /* scroll */
 var photo=document.querySelector(".photo"),lastNav=0,hidden=false;
 function onScroll(){var y=scrollY,d=y-lastY;lastY=y;vel=vel*.8+d*.2;
@@ -910,7 +922,7 @@ function tick(){raf=requestAnimationFrame(tick);if(!on)return;
 cx+=(px-cx)*.2;cy+=(py-cy)*.2;cur.style.transform="translate3d("+cx.toFixed(1)+"px,"+cy.toFixed(1)+"px,0)";
 mx+=(tx-mx)*.07;my+=(ty-my)*.07;
 if(grid&&(Math.abs(mx-(+grid.__mx||0))>.002||Math.abs(my-(+grid.__my||0))>.002)){grid.__mx=mx;grid.__my=my;grid.style.setProperty("--mx",mx.toFixed(3));grid.style.setProperty("--my",my.toFixed(3))}
-sx+=(tsx-sx)*.12;sy+=(tsy-sy)*.12;if(hero){hero.style.setProperty("--sx",sx.toFixed(0)+"px");hero.style.setProperty("--sy",sy.toFixed(0)+"px")}
+sx+=(tsx-sx)*.12;sy+=(tsy-sy)*.12;if(hero&&(Math.abs(sx-(hero.__sx||0))>.8||Math.abs(sy-(hero.__sy||0))>.8)){hero.__sx=sx;hero.__sy=sy;hero.style.setProperty("--sx",sx.toFixed(0)+"px");hero.style.setProperty("--sy",sy.toFixed(0)+"px")}
 var target=1+Math.min(Math.abs(vel)*.35,6);rate+=(target-rate)*.12;
 if(Math.abs(rate-1)>.02||rate!==1){$(".mq div,.tm div").forEach(function(m){var a=m.getAnimations&&m.getAnimations()[0];if(a)a.updatePlaybackRate(rate)})}
 vel*=.9;
@@ -928,4 +940,8 @@ for(var i=0;i<cs.length-1;i++){var c=cs[i],n=cs[i+1],h=c.offsetHeight,st=parseFl
 c=cs[cs.length-1];c.style.removeProperty("--bs")}
 function req(){if(!tk)tk=requestAnimationFrame(upd)}
 addEventListener("scroll",req,{passive:true});addEventListener("resize",req);upd()})();</script>
+<script>(function(){var d=document.getElementById("dock"),t=0,mq=matchMedia("(min-width:1100px) and (hover:hover) and (pointer:fine)");if(!d)return;
+d.addEventListener("pointerenter",function(){if(!mq.matches)return;clearTimeout(t);d.classList.add("dk-open")});
+d.addEventListener("pointerleave",function(){clearTimeout(t);t=setTimeout(function(){d.classList.remove("dk-open")},260)});
+})();</script>
 </body></html>
